@@ -13,8 +13,11 @@
 #### 实验环境
 
 操作系统: Ubuntu 18.04
+
 编辑工具：Visual Studio Code
+
 编译工具: gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+
 排查工具：gdb/printf
 
 #### 编译
