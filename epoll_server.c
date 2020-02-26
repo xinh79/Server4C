@@ -42,11 +42,11 @@ void epoll_run(int port)
             perror("epoll_wait error");
             exit(1);
         }
-		
+
 		/*
 		此处使用的是串行处理，可以使用线程进行处理
 		*/
-		
+
         // 遍历发生变化的节点
         for(int i=0; i<ret; ++i)
         {
@@ -92,7 +92,7 @@ int init_listen_fd(int port, int epfd)
     // 端口复用
     int flag = 1;
     setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
-	
+
     int ret = bind(lfd, (struct sockaddr*)&serv, sizeof(serv));
     if(ret == -1)
     {
@@ -209,7 +209,7 @@ int get_line(int sock, char *buf, int size)
 // 读数据
 void do_read(int cfd, int epfd)
 {
-    // 将浏览器发过来的数据, 读到buf中 
+    // 将浏览器发过来的数据, 读到buf中
     char line[1024] = {0};
     // 读请求行
     int len = get_line(cfd, line, sizeof(line));
@@ -217,7 +217,7 @@ void do_read(int cfd, int epfd)
     {
         printf("客户端断开了连接...\n");
         // 关闭套接字, cfd从epoll上del
-        disconnect(cfd, epfd);         
+        disconnect(cfd, epfd);
     }
     else if (len == -1)
 	{
@@ -248,7 +248,7 @@ void do_read(int cfd, int epfd)
         // 处理http请求
         http_request(line, cfd);
         // 关闭套接字, cfd从epoll上del
-        disconnect(cfd, epfd);         
+        disconnect(cfd, epfd);
     }
 }
 
@@ -354,14 +354,14 @@ void send_dir(int cfd, const char* dirname)
         // 如果是文件
         if(S_ISREG(st.st_mode))
         {
-            sprintf(buf+strlen(buf), 
+            sprintf(buf+strlen(buf),
                     "<tr><td><a href=\"%s\">%s</a></td><td>%ld</td></tr>",
                     enstr, name, (long)st.st_size);
         }
         // 如果是目录
         else if(S_ISDIR(st.st_mode))
         {
-            sprintf(buf+strlen(buf), 
+            sprintf(buf+strlen(buf),
                     "<tr><td><a href=\"%s/\">%s/</a></td><td>%ld</td></tr>",
                     enstr, name, (long)st.st_size);
         }
@@ -465,16 +465,16 @@ void encode_str(char* to, int tosize, const char* from)
 {
     int tolen;
 
-    for (tolen = 0; *from != '\0' && tolen + 4 < tosize; ++from) 
+    for (tolen = 0; *from != '\0' && tolen + 4 < tosize; ++from)
     {
 		// /_.-~这些无需转换
-        if (isalnum(*from) || strchr("/_.-~", *from) != (char*)0) 
+        if (isalnum(*from) || strchr("/_.-~", *from) != (char*)0)
         {
             *to = *from;
             ++to;
             ++tolen;
-        } 
-        else 
+        }
+        else
         {
 			// (int) *from & 0xff可以将十进制数转换为十六进制
             sprintf(to, "%%%02x", (int) *from & 0xff);
@@ -491,15 +491,15 @@ void encode_str(char* to, int tosize, const char* from)
 // 将除去字母数字及/_.-~以外的字符转义后回写
 void decode_str(char *to, char *from)
 {
-    for ( ; *from != '\0'; ++to, ++from  ) 
+    for ( ; *from != '\0'; ++to, ++from  )
     {
-        if (from[0] == '%' && isxdigit(from[1]) && isxdigit(from[2])) 
-        { 
+        if (from[0] == '%' && isxdigit(from[1]) && isxdigit(from[2]))
+        {
 
             *to = hexit(from[1])*16 + hexit(from[2]);
 
-            from += 2;                      
-        } 
+            from += 2;
+        }
         else
         {
             *to = *from;
@@ -517,7 +517,7 @@ const char *get_file_type(const char *name)
     char* dot;
 
     // 自右向左查找‘.’字符, 如不存在返回NULL
-    dot = strrchr(name, '.');   
+    dot = strrchr(name, '.');
     if (dot == NULL)
         return "text/plain; charset=utf-8";
     if (strcmp(dot, ".html") == 0 || strcmp(dot, ".htm") == 0)
